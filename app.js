@@ -29,13 +29,43 @@ const managerQuestions = [{
 }];
 
 const employeeQuestions = [{
+    type: "confirm",
+    message: "Would you like to add an Employee?",
+    name: "addEmployee"
+},
+{
+    type: "input",
+    message: "Enter the employee's name: ",
+    name: "employeeName",
+    when: answers => answers.addEmployee
+}, {
+    type: "input",
+    message: "Enter the employee's email: ",
+    name: "employeeEmail",
+    when: answers => answers.addEmployee
+},
+{
     type: "list",
     message: "Please choose the employee's role: ",
     choices: ["Engineer", "Intern"],
-    name: "role"
+    name: "role",
+    when: answers => answers.addEmployee
+},
+{
+    type: "input",
+    message: "Please enter the Github username: ",
+    name: "github",
+    when: answers => answers.role === "Engineer"
+},
+{
+    type: "input",
+    message: "Please enter the school: ",
+    name: "school",
+    when: answers => answers.role === "Intern"
+
 }]
 
-getManagerInfo = async (currentId) => {
+getManagerInfo = async () => {
     try {
         return await inquirer
             .prompt(managerQuestions)
@@ -48,24 +78,10 @@ getManagerInfo = async (currentId) => {
     }
 }
 
-addEmployee = async () => {
-    try {
-        return inquirer.prompt(
-            {
-                type: "confirm",
-                message: "Would you like to add an Employee?",
-                name: "addEmployee"
-            }
-        )
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-getEmployeeInfo = async (currentId) => {
+getEmployeeInfo = async () => {
 
     try {
-        return inquirer.prompt()
+        return await inquirer.prompt(employeeQuestions)
     } catch (err) {
         console.log(err);
     }
@@ -78,7 +94,7 @@ init = async () => {
 
     let team = [];
 
-    const managerInfo = getManagerInfo(currentId);
+    const managerInfo = getManagerInfo();
     managerInfo.then(answers => {
         console.log(answers);
         const managerName = answers.managerName;
@@ -88,16 +104,33 @@ init = async () => {
         team.push(manager)
 
     }).then(() => {
-        const add = addEmployee();
-        add.then(trueOrFalse => {
-            while (trueOrFalse) {
+        getEmployeeInfo().then(data => {
+            currentId++
+            const employeeName = data.employeeName;
+            const employeeEmail = data.employeeEmail;
+            const employeeRole = data.role;
+            console.log(employeeRole)
+            if (employeeRole == "Engineer") {
+                console.log("Engineer chosen")
+                const employeeGithub = data.github;
+                const employee = new Engineer(employeeName, currentId, employeeEmail, employeeGithub)
+                console.log(employee);
+                team.push(employee);
+                console.log(team);
+            } else {
+                console.log("Intern chosen")
+                const employeeSchool = data.school;
+                const employee = new Intern(employeeName, currentId, employeeEmail, employeeSchool)
+                console.log(employee);
+                team.push(employee);
+                console.log(team);
             }
+
         })
-
-
-
     })
 }
+
+
 
 init();
 
