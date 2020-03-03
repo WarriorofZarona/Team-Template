@@ -35,6 +35,7 @@ getManagerInfo = () => {
         .prompt(managerQuestions)
         .then(answers => {
             console.log(answers);
+            const managerName = answers.managerName;
 
 
         })
