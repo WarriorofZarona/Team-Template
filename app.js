@@ -28,6 +28,13 @@ const managerQuestions = [{
     name: "managerOfficeNum"
 }];
 
+const employeeQuestions = [{
+    type: "list",
+    message: "Please choose the employee's role: ",
+    choices: ["Engineer", "Intern"],
+    name: "role"
+}]
+
 getManagerInfo = async (currentId) => {
     try {
         return await inquirer
@@ -50,7 +57,19 @@ addEmployee = async () => {
                 name: "addEmployee"
             }
         )
+    } catch (err) {
+        console.log(err);
     }
+}
+
+getEmployeeInfo = async (currentId) => {
+
+    try {
+        return inquirer.prompt()
+    } catch (err) {
+        console.log(err);
+    }
+
 }
 
 init = async () => {
