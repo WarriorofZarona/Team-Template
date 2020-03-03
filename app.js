@@ -147,6 +147,9 @@ init = async () => {
     console.log("The following is the team info");
     console.log(employeeInfo);
 
+    const renderHTML = await render(employeeInfo);
+    console.log(renderHTML);
+
 }
 
 
