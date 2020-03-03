@@ -65,28 +65,70 @@ const employeeQuestions = [{
 
 }]
 
-getManagerInfo = async () => {
-    try {
-        return await inquirer
-            .prompt(managerQuestions)
-        // .then(answers => {
-        //   
 
-        // })
+
+getManagerInfo = async (currentId) => {
+
+    let manager;
+
+    try {
+        await inquirer.prompt(managerQuestions)
+            .then(answers => {
+                const managerName = answers.managerName;
+                const managerEmail = answers.managerEmail;
+                const managerOfficeNum = answers.managerOfficeNum;
+                manager = new Manager(managerName, currentId, managerEmail, managerOfficeNum);
+
+            })
     } catch (err) {
         console.log(err);
     }
+
+    return manager
+
 }
 
-getEmployeeInfo = async () => {
+getEmployeeInfo = async (currentId, team) => {
 
     try {
-        return await inquirer.prompt(employeeQuestions)
+        await inquirer
+            .prompt(employeeQuestions)
+            .then(data => {
+                currentId++
+                const employeeName = data.employeeName;
+                const employeeEmail = data.employeeEmail;
+                const employeeRole = data.role;
+                if (employeeRole == "Engineer") {
+                    console.log("Engineer chosen")
+                    const employeeGithub = data.github;
+                    const employee = new Engineer(employeeName, currentId, employeeEmail, employeeGithub)
+                    team.push(employee);
+                } else if (employeeRole == "Intern") {
+                    console.log("Intern chosen")
+                    const employeeSchool = data.school;
+                    const employee = new Intern(employeeName, currentId, employeeEmail, employeeSchool)
+                    team.push(employee);
+                }
+                if (data.addEmployee) {
+                    console.log("The follow is the team so far")
+                    console.log(team);
+                    console.log("Repeating question!");
+                    return getEmployeeInfo(currentId, team);
+                } else {
+                    console.log("Done!");
+                    console.log("The following team was created")
+                    console.log(team)
+                }
+            })
     } catch (err) {
+        console.log("ERROR!")
         console.log(err);
     }
-
+    return team
 }
+
+combineTeam = async (managerInfo, employeeInfo) => await employeeInfo.unshift(managerInfo)
+
 
 init = async () => {
 
@@ -94,42 +136,18 @@ init = async () => {
 
     let team = [];
 
-    const managerInfo = getManagerInfo();
-    managerInfo.then(answers => {
-        console.log(answers);
-        const managerName = answers.managerName;
-        const managerEmail = answers.managerEmail;
-        const managerOfficeNum = answers.managerOfficeNum;
-        const manager = new Manager(managerName, currentId, managerEmail, managerOfficeNum);
-        team.push(manager)
+    let managerInfo = await getManagerInfo(currentId)
+    console.log("The following is the manager info")
+    console.log(managerInfo);
+    team.push(managerInfo);
 
-    }).then(() => {
-        getEmployeeInfo().then(data => {
-            currentId++
-            const employeeName = data.employeeName;
-            const employeeEmail = data.employeeEmail;
-            const employeeRole = data.role;
-            console.log(employeeRole)
-            if (employeeRole == "Engineer") {
-                console.log("Engineer chosen")
-                const employeeGithub = data.github;
-                const employee = new Engineer(employeeName, currentId, employeeEmail, employeeGithub)
-                console.log(employee);
-                team.push(employee);
-                console.log(team);
-            } else {
-                console.log("Intern chosen")
-                const employeeSchool = data.school;
-                const employee = new Intern(employeeName, currentId, employeeEmail, employeeSchool)
-                console.log(employee);
-                team.push(employee);
-                console.log(team);
-            }
+    const employeeInfo = await getEmployeeInfo(currentId, team);
 
-        })
-    })
+    console.log("YO")
+    console.log("The following is the team info");
+    console.log(employeeInfo);
+
 }
-
 
 
 init();
