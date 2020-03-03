@@ -15,7 +15,7 @@ let currentId = 1;
 const managerQuestions = [{
     type: "input",
     message: "Enter the manager's name: ",
-    name: "managerName"
+    name: "managerName",
 
 },
 {
@@ -29,22 +29,38 @@ const managerQuestions = [{
 }
 ]
 
-getManagerInfo = () => {
+getManagerInfo = async (currentId) => {
+    try {
+        return await inquirer
+            .prompt(managerQuestions)
+        // .then(answers => {
+        //   
 
-    inquirer
-        .prompt(managerQuestions)
-        .then(answers => {
-            console.log(answers);
-            const managerName = answers.managerName;
-
-
-        })
-
+        // })
+    } catch (err) {
+        console.log(err);
+    }
 }
 
-init = () => {
+init = async () => {
 
-    getManagerInfo()
+    let currentId = 1;
+
+    let team = [];
+
+    const managerInfo = getManagerInfo(currentId);
+    managerInfo.then(answers => {
+        console.log(answers);
+        const managerName = answers.managerName;
+        const managerEmail = answers.managerEmail;
+        const managerOfficeNum = answers.managerOfficeNum;
+        const manager = new Manager(managerName, currentId, managerEmail, managerOfficeNum);
+        team.push(manager)
+
+    }).then(() => console.log(team))
+        .then();
+
+
 
 }
 
