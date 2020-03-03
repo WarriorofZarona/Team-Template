@@ -10,6 +10,8 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+let currentId = 1;
+
 const managerQuestions = [{
     type: "input",
     message: "Enter the manager's name: ",
@@ -27,17 +29,13 @@ const managerQuestions = [{
 }
 ]
 
-getManagerInfo = (currentId) => {
+getManagerInfo = () => {
 
     inquirer
         .prompt(managerQuestions)
         .then(answers => {
             console.log(answers);
-            const managerName = answers.managerName;
-            const managerEmail = answers.managerEmail;
-            const managerOfficeNum = answers.managerOfficeNum;
-            const manager = new Manager(managerName, currentId, managerEmail, managerOfficeNum);
-            console.log(manager);
+
 
         })
 
@@ -45,11 +43,7 @@ getManagerInfo = (currentId) => {
 
 init = () => {
 
-    let currentId = 1;
-
-    getManagerInfo(currentId);
-
-    currentId++;
+    getManagerInfo()
 
 }
 
