@@ -26,8 +26,7 @@ const managerQuestions = [{
     type: "input",
     message: "Enter the office number: ",
     name: "managerOfficeNum"
-}
-]
+}];
 
 getManagerInfo = async (currentId) => {
     try {
@@ -39,6 +38,18 @@ getManagerInfo = async (currentId) => {
         // })
     } catch (err) {
         console.log(err);
+    }
+}
+
+addEmployee = async () => {
+    try {
+        return inquirer.prompt(
+            {
+                type: "confirm",
+                message: "Would you like to add an Employee?",
+                name: "addEmployee"
+            }
+        )
     }
 }
 
@@ -57,11 +68,16 @@ init = async () => {
         const manager = new Manager(managerName, currentId, managerEmail, managerOfficeNum);
         team.push(manager)
 
-    }).then(() => console.log(team))
-        .then();
+    }).then(() => {
+        const add = addEmployee();
+        add.then(trueOrFalse => {
+            while (trueOrFalse) {
+            }
+        })
 
 
 
+    })
 }
 
 init();
