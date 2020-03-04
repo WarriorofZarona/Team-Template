@@ -15,8 +15,7 @@ let currentId = 1;
 const managerQuestions = [{
     type: "input",
     message: "Enter the manager's name: ",
-    name: "managerName",
-
+    name: "managerName"
 },
 {
     type: "input",
@@ -62,10 +61,7 @@ const employeeQuestions = [{
     message: "Please enter the school: ",
     name: "school",
     when: answers => answers.role === "Intern"
-
 }]
-
-
 
 getManagerInfo = async (currentId) => {
 
@@ -83,13 +79,10 @@ getManagerInfo = async (currentId) => {
     } catch (err) {
         console.log(err);
     }
-
-    return manager
-
+    return manager;
 }
 
 getEmployeeInfo = async (currentId, team) => {
-
     try {
         await inquirer
             .prompt(employeeQuestions)
@@ -104,18 +97,18 @@ getEmployeeInfo = async (currentId, team) => {
                     const employee = new Engineer(employeeName, currentId, employeeEmail, employeeGithub)
                     team.push(employee);
                 } else if (employeeRole == "Intern") {
-                    console.log("Intern chosen")
+                    console.log("Intern chosen");
                     const employeeSchool = data.school;
                     const employee = new Intern(employeeName, currentId, employeeEmail, employeeSchool)
                     team.push(employee);
                 }
                 if (data.addEmployee) {
-                    console.log("The follow is the team so far")
+                    console.log("So far, our team looks like this: ")
                     console.log(team);
                     console.log("Repeating question!");
                     return getEmployeeInfo(currentId, team);
                 } else {
-                    console.log("Done!");
+                    console.log("All employees added!");
                     console.log("The following team was created")
                     console.log(team)
                 }
@@ -124,41 +117,29 @@ getEmployeeInfo = async (currentId, team) => {
         console.log("ERROR!")
         console.log(err);
     }
-    return team
+    return team;
 }
 
 
 init = async () => {
-
     let currentId = 1;
-
     let team = [];
-
-    let managerInfo = await getManagerInfo(currentId)
+    const managerInfo = await getManagerInfo(currentId)
     console.log("The following is the manager info")
     console.log(managerInfo);
     team.push(managerInfo);
-
     const employeeInfo = await getEmployeeInfo(currentId, team);
-
-    console.log("YO")
-    console.log("The following is the team info");
-    console.log(employeeInfo);
-
     const renderHTML = await render(employeeInfo);
-    console.log(renderHTML);
-
     fs.writeFile(outputPath, renderHTML, function (err) {
         if (err) {
             throw err;
+        } else {
+            console.log("The team.html file has been successfully written!");
         }
     });
-
-}
-
+};
 
 init();
-
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
