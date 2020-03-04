@@ -127,8 +127,6 @@ getEmployeeInfo = async (currentId, team) => {
     return team
 }
 
-combineTeam = async (managerInfo, employeeInfo) => await employeeInfo.unshift(managerInfo)
-
 
 init = async () => {
 
@@ -149,6 +147,12 @@ init = async () => {
 
     const renderHTML = await render(employeeInfo);
     console.log(renderHTML);
+
+    fs.writeFile(outputPath, renderHTML, function (err) {
+        if (err) {
+            throw err;
+        }
+    });
 
 }
 
