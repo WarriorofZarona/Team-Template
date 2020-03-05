@@ -10,8 +10,6 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-let currentId = 1;
-
 const managerQuestions = [{
     type: "input",
     message: "Enter the manager's name: ",
@@ -92,12 +90,10 @@ getEmployeeInfo = async (currentId, team) => {
                 const employeeEmail = data.employeeEmail;
                 const employeeRole = data.role;
                 if (employeeRole == "Engineer") {
-                    console.log("Engineer chosen")
                     const employeeGithub = data.github;
                     const employee = new Engineer(employeeName, currentId, employeeEmail, employeeGithub)
                     team.push(employee);
                 } else if (employeeRole == "Intern") {
-                    console.log("Intern chosen");
                     const employeeSchool = data.school;
                     const employee = new Intern(employeeName, currentId, employeeEmail, employeeSchool)
                     team.push(employee);
@@ -105,7 +101,6 @@ getEmployeeInfo = async (currentId, team) => {
                 if (data.addEmployee) {
                     console.log("So far, our team looks like this: ")
                     console.log(team);
-                    console.log("Repeating question!");
                     return getEmployeeInfo(currentId, team);
                 } else {
                     console.log("All employees added!");
